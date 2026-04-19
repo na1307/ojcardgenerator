@@ -51,6 +51,7 @@
         descriptionSize: 19,
         quote: "\"Hooray!\" ―QP",
         quoteSize: 18,
+        max1: false,
         level: 4,
         cost: 0,
         type: "Boost",
@@ -306,6 +307,11 @@
         }
 
         ctx.drawImage(type, 30, 290)
+
+        // Draw Max 1
+        if (cardState.max1) {
+            ctx.drawImage(images.max1, 270, 310)
+        }
 
         // Draw Card Description and Quote
         const textAreaX = 22
@@ -594,6 +600,7 @@
         <div class="container">
             <label for="name">Name:</label>
             <Input id="name" bind:value={cardState.name} onchange={draw}/>
+            <Input id="max1" label="Max1" type="checkbox" bind:checked={cardState.max1} onchange={draw}/>
         </div>
 
         <div class="container">
