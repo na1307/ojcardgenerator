@@ -319,7 +319,7 @@
             ctx.beginPath()
             ctx.rect(0, 0, 0, 0)
             ctx.clip()
-            
+
             const h_desc = drawText(ctx, cardState.description, {
                 width: textAreaWidth,
                 height: textAreaHeight,
@@ -495,11 +495,6 @@
 </script>
 
 <style>
-    @font-face {
-        font-family: 'RockoUltraFLF';
-        src: url('RockoUltraFLF.ttf') format('truetype');
-    }
-
     .root-container {
         display: flex;
         flex-direction: row;
