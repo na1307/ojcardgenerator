@@ -44,15 +44,19 @@
     const cardLevels = [0, 1, 2, 3, 4, 5]
     const cardCosts = [0, 3, 5, 10, 13, 20, 30, 40, 50, 100]
     const cardTypes = ["Boost", "Battle", "Event", "Trap", "Gift", "Banner"]
-    const cardRarities = ["Common", "Uncommon", "Rare"]
-    let cardName = $state("Pudding")
-    let cardDescription = $state("Fully restore HP.")
-    let cardQuote = $state("\"Hooray!\" ―QP")
-    let cardLevel = $state(4)
-    let cardCost: number | string = $state(0)
-    let cardType = $state("Boost")
-    let isHyper = $state(false)
-    let cardRarity = $state("Rare")
+    const cardRarities = ["None", "Common", "Uncommon", "Rare"]
+    let cardState = $state({
+        name: "Pudding",
+        description: "Fully restore HP.",
+        descriptionSize: 19,
+        quote: "\"Hooray!\" ―QP",
+        quoteSize: 18,
+        level: 4,
+        cost: 0,
+        type: "Boost",
+        hyper: false,
+        rarity: "Rare"
+    })
 
     function draw() {
         // Clear canvas
@@ -61,10 +65,10 @@
         // Draw Card Base
         let base: HTMLImageElement
 
-        if (isHyper) {
+        if (cardState.hyper) {
             base = images.basehyper
         } else {
-            switch (cardType) {
+            switch (cardState.type) {
                 case "Boost":
                     base = images.baseboost
 
@@ -103,20 +107,17 @@
         ctx.drawImage(base, 0, 0)
 
         // Draw Card Name
-        drawText(ctx, cardName, {
-            width: 349,
-            height: 24,
-            x: 0,
-            y: 14,
-            align: "center",
-            font: "OJ Plantin",
-            fontSize: 22
-        })
+        ctx.font = "22px OJ Plantin"
+        ctx.textAlign = "center"
+        ctx.fillText(cardState.name, 175, 30, 260)
 
         // Draw Card Rarity
-        let rarity: HTMLImageElement
+        let rarity: HTMLImageElement | null = null
 
-        switch (cardRarity) {
+        switch (cardState.rarity) {
+            case "None":
+                break
+
             case "Common":
                 rarity = images.rarecommon
 
@@ -136,7 +137,9 @@
                 throw new Error()
         }
 
-        ctx.drawImage(rarity, 310, 13, 22, 22)
+        if (rarity !== null) {
+            ctx.drawImage(rarity, 310, 13, 22, 22)
+        }
 
         // Draw Card Image
         ctx.save()
@@ -149,7 +152,7 @@
         // Draw Card Level
         let level: HTMLImageElement | null
 
-        switch (cardLevel) {
+        switch (cardState.level) {
             case 0:
                 level = null
 
@@ -184,25 +187,25 @@
                 throw new Error()
         }
 
-        for (let i = 0; i < cardLevel; i++) {
+        for (let i = 0; i < cardState.level; i++) {
             ctx.drawImage(level!, 8, 124 + i * 32, 32, 32)
         }
 
         // Draw Card Cost
-        switch (cardCost) {
+        switch (cardState.cost) {
             case 0:
                 break
 
             case 3:
             case 5:
-                for (let i = 0; i < cardCost; i++) {
+                for (let i = 0; i < cardState.cost; i++) {
                     ctx.drawImage(images.cost1star, 308, 198 - i * 32, 32, 32)
                 }
 
                 break
 
             case 13:
-                ctx.drawImage(images.cost10stars, 308, 198,32,32)
+                ctx.drawImage(images.cost10stars, 308, 198, 32, 32)
 
                 for (let i = 0; i < 3; i++) {
                     ctx.drawImage(images.cost1star, 308, 166 - i * 32, 32, 32)
@@ -215,7 +218,7 @@
             case 30:
             case 40:
             case 50:
-                for (let i = 0; i / 10 < cardCost / 10; i += 10) {
+                for (let i = 0; i / 10 < cardState.cost / 10; i += 10) {
                     ctx.drawImage(images.cost10stars, 308, 198 - i / 10 * 32, 32, 32)
                 }
 
@@ -235,8 +238,8 @@
         // Draw Card Type
         let type: HTMLImageElement
 
-        if (!isHyper) {
-            switch (cardType) {
+        if (!cardState.hyper) {
+            switch (cardState.type) {
                 case "Boost":
                     type = images.typeboost
 
@@ -271,7 +274,7 @@
                     throw new Error()
             }
         } else {
-            switch (cardType) {
+            switch (cardState.type) {
                 case "Boost":
                     type = images.typehyperboost
 
@@ -304,40 +307,78 @@
 
         ctx.drawImage(type, 30, 290)
 
-        // Draw Card Description
-        if (cardQuote.trim() !== "") {
-            let h = drawText(ctx, cardDescription, {
-                width: 349,
-                height: 170,
-                x: 24,
-                y: 290,
+        // Draw Card Description and Quote
+        const textAreaX = 22
+        const textAreaY = 320
+        const textAreaWidth = 306
+        const textAreaHeight = 145
+
+        if (cardState.quote.trim() !== "") {
+            // Measure heights first without drawing visibly
+            ctx.save()
+            ctx.beginPath()
+            ctx.rect(0, 0, 0, 0)
+            ctx.clip()
+            
+            const h_desc = drawText(ctx, cardState.description, {
+                width: textAreaWidth,
+                height: textAreaHeight,
+                x: textAreaX,
+                y: textAreaY,
                 align: "left",
-                vAlign: "middle",
+                vAlign: "top",
                 font: "OJ Plantin",
-                fontSize: 20
+                fontSize: cardState.descriptionSize
+            }).height
+
+            const h_quote = drawText(ctx, cardState.quote, {
+                width: textAreaWidth,
+                height: textAreaHeight,
+                x: textAreaX,
+                y: textAreaY,
+                align: "left",
+                vAlign: "top",
+                font: "OJ Plantin",
+                fontSize: cardState.quoteSize,
+                fontStyle: "italic"
+            }).height
+            ctx.restore()
+
+            const totalHeight = h_desc + cardState.quoteSize + h_quote
+            const startY = textAreaY + (textAreaHeight - totalHeight) / 2
+
+            drawText(ctx, cardState.description, {
+                width: textAreaWidth,
+                height: h_desc,
+                x: textAreaX,
+                y: startY,
+                align: "left",
+                vAlign: "top",
+                font: "OJ Plantin",
+                fontSize: cardState.descriptionSize
             })
 
-            drawText(ctx, cardQuote, {
-                width: 349,
-                height: 170,
-                x: 24,
-                y: 290 + h.height + 20,
+            drawText(ctx, cardState.quote, {
+                width: textAreaWidth,
+                height: h_quote,
+                x: textAreaX,
+                y: startY + h_desc + cardState.quoteSize,
                 align: "left",
-                vAlign: "middle",
+                vAlign: "top",
                 font: "OJ Plantin",
-                fontSize: 20,
+                fontSize: cardState.quoteSize,
                 fontStyle: "italic"
             })
         } else {
-            drawText(ctx, cardDescription, {
-                width: 349,
-                height: 170,
-                x: 24,
-                y: 310,
+            drawText(ctx, cardState.description, {
+                width: textAreaWidth,
+                height: textAreaHeight,
+                x: textAreaX,
+                y: textAreaY,
                 align: "left",
                 vAlign: "middle",
                 font: "OJ Plantin",
-                fontSize: 20
+                fontSize: cardState.descriptionSize
             })
         }
     }
@@ -454,9 +495,43 @@
 </script>
 
 <style>
+    @font-face {
+        font-family: 'RockoUltraFLF';
+        src: url('RockoUltraFLF.ttf') format('truetype');
+    }
+
     .root-container {
         display: flex;
-        justify-content: space-between;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 40px;
+        padding: 20px;
+        flex-wrap: wrap;
+    }
+
+    @media (max-width: 800px) {
+        .root-container {
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+        }
+    }
+
+    .preview-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .controls-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        max-width: 450px;
     }
 
     .container {
@@ -464,20 +539,38 @@
         align-items: center;
         gap: 10px;
     }
+
+    .container label {
+        min-width: 90px;
+        font-weight: bold;
+        font-family: RockoUltraFLF, sans-serif;
+    }
+
+    canvas {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        background-color: #f8f9fa;
+    }
+
+    h1 {
+        text-align: center;
+        font-family: RockoUltraFLF, sans-serif;
+        margin: 20px 0;
+    }
 </style>
 
 <h1>100% Orange Juice! Card generator</h1>
 
-<br>
-
 <div class="root-container">
-    <div>
-        <canvas id="preview" width="349px" height="488px"></canvas>
+    <div class="preview-section">
+        <canvas id="preview" width="349" height="488"></canvas>
         <Button color="primary" style="display: flex; justify-self: center;" onclick={() => {
             const url = canvas.toDataURL("image/png")
             const downloadLink = document.createElement('a')
             downloadLink.href = url
-            downloadLink.download = `${cardName.toLowerCase()}.png`
+            downloadLink.download = `${cardState.name.toLowerCase()}.png`
 
             document.body.appendChild(downloadLink)
             downloadLink.click()
@@ -486,8 +579,8 @@
         </Button>
     </div>
 
-    <div>
-        <Input type="file" id="upload-image" style="width: 300px;" onchange={e => {
+    <div class="controls-section">
+        <Input type="file" id="upload-image" onchange={e => {
             const reader = new FileReader()
 
             reader.onload = event => {
@@ -503,32 +596,34 @@
             }
         }}/>
 
-        <br>
-
         <div class="container">
             <label for="name">Name:</label>
-            <Input id="name" bind:value={cardName} onchange={draw}/>
+            <Input id="name" bind:value={cardState.name} onchange={draw}/>
         </div>
 
-        <br>
-
-        <div>
+        <div class="container">
             <label for="desc">Description:</label>
-            <Input id="desc" type="textarea" bind:value={cardDescription} onchange={draw}/>
+            <Input id="desc" type="textarea" bind:value={cardState.description} onchange={draw}/>
         </div>
 
-        <br>
+        <div class="container">
+            <label for="descsize">Description text size (pixel):</label>
+            <Input id="descsize" type="number" bind:value={cardState.descriptionSize} onchange={draw}/>
+        </div>
 
         <div class="container">
             <label for="quote">Quote:</label>
-            <Input id="quote" bind:value={cardQuote} onchange={draw}/>
+            <Input id="quote" bind:value={cardState.quote} onchange={draw}/>
         </div>
 
-        <br>
+        <div class="container">
+            <label for="quotesize">Quote text size (pixel):</label>
+            <Input id="quotesize" type="number" bind:value={cardState.quoteSize} onchange={draw}/>
+        </div>
 
         <div class="container">
             <label for="level">Level:</label>
-            <Input id="level" type="select" bind:value={cardLevel} onchange={draw}>
+            <Input id="level" type="select" bind:value={cardState.level} onchange={draw}>
                 {#each cardLevels as cl}
                     <option value={cl}>
                         {cl.toString()}
@@ -537,11 +632,9 @@
             </Input>
         </div>
 
-        <br>
-
         <div class="container">
             <label for="cost">Cost:</label>
-            <Input id="cost" type="select" bind:value={cardCost} onchange={draw}>
+            <Input id="cost" type="select" bind:value={cardState.cost} onchange={draw}>
                 {#each cardCosts as cc}
                     <option value={cc}>
                         {#if cc !== 100}
@@ -554,13 +647,11 @@
             </Input>
         </div>
 
-        <br>
-
         <div class="container">
             <label for="type">Type:</label>
-            <Input id="type" type="select" bind:value={cardType} onchange={e => {
+            <Input id="type" type="select" bind:value={cardState.type} onchange={e => {
             if (e.currentTarget.value === "Banner") {
-                isHyper = false
+                cardState.hyper = false
             }
 
             draw()
@@ -571,15 +662,13 @@
                     </option>
                 {/each}
             </Input>
-            <Input type="checkbox" label="Hyper" bind:checked={isHyper} disabled={cardType === "Banner"}
+            <Input type="checkbox" label="Hyper" bind:checked={cardState.hyper} disabled={cardState.type === "Banner"}
                    onchange={draw}/>
         </div>
 
-        <br>
-
         <div class="container">
             <label for="rarity">Rarity:</label>
-            <Input id="rarity" type="select" bind:value={cardRarity} onchange={draw}>
+            <Input id="rarity" type="select" bind:value={cardState.rarity} onchange={draw}>
                 {#each cardRarities as cr}
                     <option value={cr}>
                         {cr}
