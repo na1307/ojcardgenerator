@@ -593,6 +593,7 @@
 
             // @ts-expect-error
             if (e.target?.files[0]) {
+                // @ts-expect-error
                 reader.readAsDataURL(e.target!.files[0])
             }
         }}/>
