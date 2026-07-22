@@ -3,6 +3,38 @@
     import {onMount} from 'svelte'
     import {Button, Input} from "@sveltestrap/sveltestrap"
     import {drawText} from "canvas-txt"
+    import OJPlantinOTF from './lib/assets/OJPlantin-Regular.otf'
+    import BaseBoostPNG from './lib/assets/images/baseboost.png'
+    import BaseBattlePNG from './lib/assets/images/basebattle.png'
+    import BaseEventPNG from './lib/assets/images/baseevent.png'
+    import BaseTrapPNG from './lib/assets/images/basetrap.png'
+    import BaseGiftPNG from './lib/assets/images/basegift.png'
+    import BaseBannerPNG from './lib/assets/images/basebanner.png'
+    import BaseHyperPNG from './lib/assets/images/basehyper.png'
+    import Cost1StarPNG from './lib/assets/images/cost/1.png'
+    import Cost10StarsPNG from './lib/assets/images/cost/10.png'
+    import CostVariableStarsPNG from './lib/assets/images/cost/variable.png'
+    import Level1PNG from './lib/assets/images/level/1.png'
+    import Level2PNG from './lib/assets/images/level/2.png'
+    import Level3PNG from './lib/assets/images/level/3.png'
+    import Level4PNG from './lib/assets/images/level/4.png'
+    import Level5PNG from './lib/assets/images/level/5.png'
+    import Max1PNG from './lib/assets/images/max1.png'
+    import PuddingPNG from './lib/assets/images/pudding.png'
+    import RareCommonPNG from './lib/assets/images/rarity/common.png'
+    import RareUncommonPNG from './lib/assets/images/rarity/uncommon.png'
+    import RareRarePNG from './lib/assets/images/rarity/rare.png'
+    import TypeBoostPNG from './lib/assets/images/type/boost.png'
+    import TypeBattlePNG from './lib/assets/images/type/battle.png'
+    import TypeEventPNG from './lib/assets/images/type/event.png'
+    import TypeTrapPNG from './lib/assets/images/type/trap.png'
+    import TypeGiftPNG from './lib/assets/images/type/gift.png'
+    import TypeBannerPNG from './lib/assets/images/type/banner.png'
+    import TypeHyperBoostPNG from './lib/assets/images/type/hyperboost.png'
+    import TypeHyperBattlePNG from './lib/assets/images/type/hyperbattle.png'
+    import TypeHyperEventPNG from './lib/assets/images/type/hyperevent.png'
+    import TypeHyperTrapPNG from './lib/assets/images/type/hypertrap.png'
+    import TypeHyperGiftPNG from './lib/assets/images/type/hypergift.png'
 
     let canvas: HTMLCanvasElement
     let ctx: CanvasRenderingContext2D
@@ -390,72 +422,72 @@
     }
 
     onMount(() => {
-        const ojplantin = new FontFace("OJ Plantin", "url(OJPlantin-Regular.otf)")
+        const ojplantin = new FontFace("OJ Plantin", `url(${OJPlantinOTF})`)
 
         ojplantin.load().then(f => document.fonts.add(f))
 
         const baseboost = new Image()
-        baseboost.src = "baseboost.png"
+        baseboost.src = BaseBoostPNG
         const basebattle = new Image()
-        basebattle.src = "basebattle.png"
+        basebattle.src = BaseBattlePNG
         const baseevent = new Image()
-        baseevent.src = "baseevent.png"
+        baseevent.src = BaseEventPNG
         const basetrap = new Image()
-        basetrap.src = "basetrap.png"
+        basetrap.src = BaseTrapPNG
         const basegift = new Image()
-        basegift.src = "basegift.png"
+        basegift.src = BaseGiftPNG
         const basebanner = new Image()
-        basebanner.src = "basebanner.png"
+        basebanner.src = BaseBannerPNG
         const basehyper = new Image()
-        basehyper.src = "basehyper.png"
+        basehyper.src = BaseHyperPNG
         const cost1star = new Image()
-        cost1star.src = "cost1star.png"
+        cost1star.src = Cost1StarPNG
         const cost10stars = new Image()
-        cost10stars.src = "cost10stars.png"
+        cost10stars.src = Cost10StarsPNG
         const costvariablestars = new Image()
-        costvariablestars.src = "costvariablestars.png"
+        costvariablestars.src = CostVariableStarsPNG
         const level1 = new Image()
-        level1.src = "level1.png"
+        level1.src = Level1PNG
         const level2 = new Image()
-        level2.src = "level2.png"
+        level2.src = Level2PNG
         const level3 = new Image()
-        level3.src = "level3.png"
+        level3.src = Level3PNG
         const level4 = new Image()
-        level4.src = "level4.png"
+        level4.src = Level4PNG
         const level5 = new Image()
-        level5.src = "level5.png"
+        level5.src = Level5PNG
         const max1 = new Image()
-        max1.src = "max1.png"
+        max1.src = Max1PNG
         const pudding = new Image()
-        pudding.src = "pudding.png"
+        pudding.src = PuddingPNG
         const rarecommon = new Image()
-        rarecommon.src = "rarecommon.png"
+        rarecommon.src = RareCommonPNG
         const rareuncommon = new Image()
-        rareuncommon.src = "rareuncommon.png"
+        rareuncommon.src = RareUncommonPNG
         const rarerare = new Image()
-        rarerare.src = "rarerare.png"
+        rarerare.src = RareRarePNG
         const typeboost = new Image()
-        typeboost.src = "typeboost.png"
+        typeboost.src = TypeBoostPNG
         const typebattle = new Image()
-        typebattle.src = "typebattle.png"
+        typebattle.src = TypeBattlePNG
         const typeevent = new Image()
-        typeevent.src = "typeevent.png"
+        typeevent.src = TypeEventPNG
         const typetrap = new Image()
-        typetrap.src = "typetrap.png"
+        typetrap.src = TypeTrapPNG
         const typegift = new Image()
-        typegift.src = "typegift.png"
+        typegift.src = TypeGiftPNG
         const typebanner = new Image()
-        typebanner.src = "typebanner.png"
+        typebanner.src = TypeBannerPNG
         const typehyperboost = new Image()
-        typehyperboost.src = "typehyperboost.png"
+        typehyperboost.src = TypeHyperBoostPNG
         const typehyperbattle = new Image()
-        typehyperbattle.src = "typehyperbattle.png"
+        typehyperbattle.src = TypeHyperBattlePNG
         const typehyperevent = new Image()
-        typehyperevent.src = "typehyperevent.png"
+        typehyperevent.src = TypeHyperEventPNG
         const typehypertrap = new Image()
-        typehypertrap.src = "typehypertrap.png"
+        typehypertrap.src = TypeHyperTrapPNG
         const typehypergift = new Image()
-        typehypergift.src = "typehypergift.png"
+        typehypergift.src = TypeHyperGiftPNG
 
         images = {
             baseboost,
