@@ -202,7 +202,7 @@
 
         for (let i = 0; i < cardState.level; i++) {
             ctx.save()
-            ctx.filter = `hue-rotate(${levelStarRotation[cardState.level - 1].hue}deg) saturate(${levelStarRotation[cardState.level - 1].saturation + 100}%)`
+            ctx.filter = `hue-rotate(${levelStarRotation[cardState.level - 1].hue}rad)`
             ctx.drawImage(level, 8, 124 + i * 32, 32, 32)
             ctx.restore()
         }
