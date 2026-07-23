@@ -15,7 +15,6 @@
     import Cost10StarsPNG from './lib/assets/images/cost/10_star.svg'
     import CostVariableStarsPNG from './lib/assets/images/cost/n_star.svg'
     import LevelPNG from './lib/assets/images/level.svg'
-    import Max1PNG from './lib/assets/images/max1.png'
     import PuddingPNG from './lib/assets/images/pudding.webp'
     import RareCommonPNG from './lib/assets/images/rarity/C.svg'
     import RareUncommonPNG from './lib/assets/images/rarity/U.svg'
@@ -47,7 +46,6 @@
         cost10stars: HTMLImageElement
         costvariablestars: HTMLImageElement
         level: HTMLImageElement
-        max1: HTMLImageElement
         pudding: HTMLImageElement
         rarecommon: HTMLImageElement
         rareuncommon: HTMLImageElement
@@ -98,7 +96,7 @@
         descriptionSize: 19,
         quote: "\"Hooray!\" ―QP",
         quoteSize: 18,
-        max1: false,
+        maxNumber: 3,
         level: 4,
         cost: 0,
         type: "Boost",
@@ -323,10 +321,10 @@
 
         ctx.drawImage(type, 30, 290)
 
-        // Draw Max 1
-        if (cardState.max1) {
-            ctx.drawImage(images.max1, 270, 310)
-        }
+        // Draw Max Number
+        ctx.font = "11px OJ Plantin"
+        ctx.textAlign = "center"
+        ctx.fillText(`(Max ${cardState.maxNumber})`, 308, 310)
 
         // Draw Card Description and Quote
         const textAreaX = 22
@@ -431,8 +429,6 @@
         costvariablestars.src = CostVariableStarsPNG
         const level = new Image()
         level.src = LevelPNG
-        const max1 = new Image()
-        max1.src = Max1PNG
         const pudding = new Image()
         pudding.src = PuddingPNG
         const rarecommon = new Image()
@@ -476,7 +472,6 @@
             cost10stars,
             costvariablestars,
             level,
-            max1,
             pudding,
             rarecommon,
             rareuncommon,
@@ -604,7 +599,11 @@
         <div class="container">
             <label for="name">Name:</label>
             <Input id="name" bind:value={cardState.name} onchange={draw}/>
-            <Input id="max1" label="Max1" type="checkbox" bind:checked={cardState.max1} onchange={draw}/>
+        </div>
+
+        <div class="container">
+            <label for="max">Max:</label>
+            <Input id="max" type="number" bind:value={cardState.maxNumber} onchange={draw}/>
         </div>
 
         <div class="container">
