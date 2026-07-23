@@ -11,19 +11,15 @@
     import BaseGiftPNG from './lib/assets/images/basegift.png'
     import BaseBannerPNG from './lib/assets/images/basebanner.png'
     import BaseHyperPNG from './lib/assets/images/basehyper.png'
-    import Cost1StarPNG from './lib/assets/images/cost/1.png'
-    import Cost10StarsPNG from './lib/assets/images/cost/10.png'
-    import CostVariableStarsPNG from './lib/assets/images/cost/variable.png'
-    import Level1PNG from './lib/assets/images/level/1.png'
-    import Level2PNG from './lib/assets/images/level/2.png'
-    import Level3PNG from './lib/assets/images/level/3.png'
-    import Level4PNG from './lib/assets/images/level/4.png'
-    import Level5PNG from './lib/assets/images/level/5.png'
+    import Cost1StarPNG from './lib/assets/images/cost/1_star.svg'
+    import Cost10StarsPNG from './lib/assets/images/cost/10_star.svg'
+    import CostVariableStarsPNG from './lib/assets/images/cost/n_star.svg'
+    import LevelPNG from './lib/assets/images/level.svg'
     import Max1PNG from './lib/assets/images/max1.png'
-    import PuddingPNG from './lib/assets/images/pudding.png'
-    import RareCommonPNG from './lib/assets/images/rarity/common.png'
-    import RareUncommonPNG from './lib/assets/images/rarity/uncommon.png'
-    import RareRarePNG from './lib/assets/images/rarity/rare.png'
+    import PuddingPNG from './lib/assets/images/pudding.webp'
+    import RareCommonPNG from './lib/assets/images/rarity/C.svg'
+    import RareUncommonPNG from './lib/assets/images/rarity/U.svg'
+    import RareRarePNG from './lib/assets/images/rarity/R.svg'
     import TypeBoostPNG from './lib/assets/images/type/boost.png'
     import TypeBattlePNG from './lib/assets/images/type/battle.png'
     import TypeEventPNG from './lib/assets/images/type/event.png'
@@ -50,11 +46,7 @@
         cost1star: HTMLImageElement
         cost10stars: HTMLImageElement
         costvariablestars: HTMLImageElement
-        level1: HTMLImageElement
-        level2: HTMLImageElement
-        level3: HTMLImageElement
-        level4: HTMLImageElement
-        level5: HTMLImageElement
+        level: HTMLImageElement
         max1: HTMLImageElement
         pudding: HTMLImageElement
         rarecommon: HTMLImageElement
@@ -72,6 +64,29 @@
         typehypertrap: HTMLImageElement
         typehypergift: HTMLImageElement
     }
+
+    const levelStarRotation = [
+        {
+            hue: 0,
+            saturation: 0
+        },
+        {
+            hue: 1.5,
+            saturation: 0.1
+        },
+        {
+            hue: 5.3,
+            saturation: 0.5
+        },
+        {
+            hue: 3,
+            saturation: 0.5
+        },
+        {
+            hue: 3.7,
+            saturation: 0.5
+        }
+    ]
 
     const cardLevels = [0, 1, 2, 3, 4, 5]
     const cardCosts = [0, 3, 5, 10, 13, 20, 30, 40, 50, 100]
@@ -183,45 +198,13 @@
         ctx.restore()
 
         // Draw Card Level
-        let level: HTMLImageElement | null
-
-        switch (cardState.level) {
-            case 0:
-                level = null
-
-                break
-
-            case 1:
-                level = images.level1
-
-                break
-
-            case 2:
-                level = images.level2
-
-                break
-
-            case 3:
-                level = images.level3
-
-                break
-
-            case 4:
-                level = images.level4
-
-                break
-
-            case 5:
-                level = images.level5
-
-                break
-
-            default:
-                throw new Error()
-        }
+        let level = images.level
 
         for (let i = 0; i < cardState.level; i++) {
-            ctx.drawImage(level!, 8, 124 + i * 32, 32, 32)
+            ctx.save()
+            ctx.filter = `hue-rotate(${levelStarRotation[cardState.level - 1].hue}deg) saturate(${levelStarRotation[cardState.level - 1].saturation + 100}%)`
+            ctx.drawImage(level, 8, 124 + i * 32, 32, 32)
+            ctx.restore()
         }
 
         // Draw Card Cost
@@ -446,16 +429,8 @@
         cost10stars.src = Cost10StarsPNG
         const costvariablestars = new Image()
         costvariablestars.src = CostVariableStarsPNG
-        const level1 = new Image()
-        level1.src = Level1PNG
-        const level2 = new Image()
-        level2.src = Level2PNG
-        const level3 = new Image()
-        level3.src = Level3PNG
-        const level4 = new Image()
-        level4.src = Level4PNG
-        const level5 = new Image()
-        level5.src = Level5PNG
+        const level = new Image()
+        level.src = LevelPNG
         const max1 = new Image()
         max1.src = Max1PNG
         const pudding = new Image()
@@ -500,11 +475,7 @@
             cost1star,
             cost10stars,
             costvariablestars,
-            level1,
-            level2,
-            level3,
-            level4,
-            level5,
+            level,
             max1,
             pudding,
             rarecommon,
